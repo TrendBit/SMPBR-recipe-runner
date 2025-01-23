@@ -1,0 +1,13 @@
+[Unit]
+Description=Recipe runner service
+
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=recipe-runner
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

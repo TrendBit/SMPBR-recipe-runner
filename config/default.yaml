@@ -1,0 +1,5 @@
+rest_api:
+  base_url: "192.168.1.241:8089"
+endpoints:
+  - name: "/control/heater/plate_temperature"
+    interval: 10  # seconds
