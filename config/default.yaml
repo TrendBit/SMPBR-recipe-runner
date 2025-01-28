@@ -27,6 +27,6 @@ pump:
 
 illumination:
   channel_0: 0.5
-  channel_1: 0.0
+  channel_1: 0.5
   channel_2: 0.0
   channel_3: 0.0
