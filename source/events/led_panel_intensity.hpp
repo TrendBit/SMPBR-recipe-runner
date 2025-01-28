@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <variant>
+
 #include "api_post.hpp"
 
 using json = nlohmann::json;
@@ -22,7 +24,7 @@ private:
     /**
      * @brief   Intensity of LED, value between 0 and 1
      */
-    float intensity;
+    std::variant<float, std::array<float,4>> intensity;
 
 public:
 
@@ -35,15 +37,25 @@ public:
         : API_post("/control/led_intensity", "channel" + std::to_string(channel)),
         intensity(intensity){ }
 
+    explicit LED_panel_intensity(std::array<float,4> intensity)
+        : API_post("/control/led_intensity"),
+        intensity(intensity){ }
+
     /**
      * @brief   Create body of POST request
      *
      * @return std::string  Body of POST request
      */
     virtual std::string Body() override final {
-        json body;
-        body["intensity"] = intensity;
-        return body.dump();
+        return std::visit([](const auto& value) -> std::string {
+            json body;
+            if constexpr (std::is_same_v<std::decay_t<decltype(value)>, float>) {
+                body["intensity"] = value;
+            } else {
+                body["intensity"] = value;
+            }
+            return body.dump();
+        }, intensity);
     }
 };
 }
