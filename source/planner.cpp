@@ -52,8 +52,12 @@ std::unique_ptr<Events::Event> Planner::Generate_event(Events::Type type, Config
             return std::make_unique<Events::Heater_intensity>(components_settings.heater.intensity);
 
         case Events::Type::illumination_on: {
-            return std::make_unique<Events::LED_panel_intensity>(
-                0, components_settings.led_panel_channels[0]);
+            return std::make_unique<Events::LED_panel_intensity>(std::array<float,4>{
+                components_settings.led_panel_channels[0],
+                components_settings.led_panel_channels[1],
+                components_settings.led_panel_channels[2],
+                components_settings.led_panel_channels[3]
+            });
         }
         case Events::Type::mix:
             return std::make_unique<Events::Mixer_stir>(
@@ -79,8 +83,11 @@ std::unique_ptr<Events::Event> Planner::Generate_event(Events::Type type, Config
 void Planner::Clean_events(){
     events_initialization.clear();
     events_loop.clear();
-    Events::LED_panel_intensity(0, 0).Execute();
+    Events::LED_panel_intensity({0,0,0,0}).Execute();
     Events::Heater_turn_off().Execute();
+    Events::Cuvette_pump_stop().Execute();
+    Events::Aerator_stop().Execute();
+    Events::Mixer_stop().Execute();
 }
 
 void Planner::Stop(){
