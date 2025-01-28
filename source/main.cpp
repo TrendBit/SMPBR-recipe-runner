@@ -1,23 +1,31 @@
 #include "main.hpp"
 
+Planner planner;
+
+void signal_handler(int) {
+    std::cout << "\nReceived shutdown signal..." << std::endl;
+    planner.Stop();
+}
+
 int main(int argc, char* argv[]) {
 
-    Events::API_call::Set_client("192.168.1.241:8089");
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <config.yaml>" << std::endl;
+        return 1;
+    }
 
-    Planner planner;
+    std::signal(SIGINT, signal_handler);
 
-    planner.Add(Events::Print("Starting new cycle"));
-    planner.Add(Events::Heater_intensity(0.0));
-    planner.Add(Events::Wait(2.5));
-    planner.Add(Events::Heater_intensity(0.0));
-    planner.Add(Events::Wait(2.5));
-    planner.Add(Events::Print(Events::Heater_temperature()));
-    planner.Add(Events::Wait(1));
-    planner.Add(Events::Print(Events::Bottle_temperature()));
-    planner.Add(Events::Wait(5));
+    Config config(argv[1]);
+
+    Events::API_call::Set_client(config.Server_URL());
+
+    planner.Load_init(config.Init_events(), config.Components_config());
+    planner.Load_loop(config.Loop_events(), config.Components_config());
 
     planner.Start();
 
     return 0;
 }
+
 
