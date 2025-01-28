@@ -30,7 +30,7 @@ protected:
      * @return API_call::Result Result of GET request
      */
     API_call::Result Get(){
-        return Receive(client.Get(endpoint));
+        return Receive(client.Get(endpoint+instance));
     }
 
     /**

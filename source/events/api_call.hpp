@@ -53,6 +53,12 @@ protected:
      */
     std::string endpoint;
 
+    /**
+     * @brief  Instance of endpoint, for example: instance = "/1" -> url = "endpoint/1"
+     *         Slash is added to start during creation of API call
+     */
+    std::string instance = "";
+
 public:
     /**
      * @brief Construct a new api call object
@@ -60,6 +66,18 @@ public:
      * @param endpoint  Endpoint of API
      */
     explicit API_call(std::string endpoint) : endpoint(endpoint) {}
+
+    /**
+     * @brief Construct a new api call object
+     *
+     * @param endpoint  Endpoint of API
+     * @param instance  Instance of endpoint
+     */
+    API_call(std::string endpoint, std::string instance) : endpoint(endpoint), instance(instance){
+        if (!instance.empty() && instance[0] != '/') {
+            this->instance = "/" + instance;
+        }
+    }
 
     /**
      * @brief   Set client for all API calls (API server IP address and port)
@@ -96,6 +114,10 @@ protected:
      * @return Result           Simplified result of HTTP request
      */
     static Result Receive(httplib::Result received_result) {
+        if(!received_result) {
+            return {500, "Server not responding"};
+        }
+
         Result result;
         result.status = received_result->status;
         if (received_result) {

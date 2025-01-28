@@ -25,15 +25,6 @@ private:
      */
     std::optional<std::string> body = std::nullopt;
 
-public:
-    /**
-     * @brief Construct a new api post object, fixed body of POST request
-     *
-     * @param endpoint  Endpoint of API
-     * @param body      Fixed variant of body of POST request
-     */
-    API_post(std::string endpoint, std::string body) : API_call(endpoint), body(body) {}
-
 protected:
     /**
      * @brief Construct a new api post object, dynamicly generated body of POST request
@@ -43,12 +34,19 @@ protected:
     explicit API_post(std::string endpoint) : API_call(endpoint) {}
 
     /**
+     * @brief Construct a new api post object, dynamicly generated body of POST request
+     *
+     * @param endpoint  Endpoint of API
+     */
+    explicit API_post(std::string endpoint, std::string instance) : API_call(endpoint, instance) {}
+
+    /**
      * @brief   Send POST request to API endpoint
      *
      * @return API_call::Result Result of POST request
      */
     API_call::Result Post(){
-        return Receive(client.Post(endpoint, Body(), "application/json"));
+        return Receive(client.Post(endpoint+instance, Body(), "application/json"));
     }
 
     /**
