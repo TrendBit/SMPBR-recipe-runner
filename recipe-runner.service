@@ -1,11 +1,10 @@
 [Unit]
 Description=Recipe runner service
-
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=recipe-runner
+ExecStart=recipe-runner /home/reactor/SMPBR-recipe-runner/config/default.yaml
 Restart=always
 User=root
 
