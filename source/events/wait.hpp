@@ -10,6 +10,8 @@
 #include <chrono>
 #include <thread>
 #include <string>
+#include <condition_variable>
+#include <mutex>
 
 #include "event.hpp"
 
@@ -23,6 +25,9 @@ private:
      * @brief   Time for which event will sleep
      */
     std::chrono::seconds wait_time;
+
+    static inline std::condition_variable cv;
+    static inline std::mutex mtx;
 
 public:
     /**
@@ -39,14 +44,20 @@ public:
      */
     ~Wait() = default;
 
+    static void Stop(){
+        cv.notify_all();
+    }
+
     /**
      * @brief   Perform sleep
      *
      * @return std::string "Wait" string
      */
     virtual std::string Execute() override final {
-        std::this_thread::sleep_for(wait_time);
+        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait_for(lock, wait_time);
         return "Wait";
     }
+
 };
 }
