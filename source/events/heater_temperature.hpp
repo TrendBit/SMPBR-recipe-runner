@@ -5,6 +5,8 @@
  * @date 23.01.2025
  */
 
+#pragma once
+
 #include <iomanip>
 #include <sstream>
 
