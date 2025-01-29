@@ -2,19 +2,21 @@
 
 Planner planner;
 
-void signal_handler(int) {
+void signal_handler(int){
     std::cout << "\nReceived shutdown signal..." << std::endl;
     planner.Stop();
 }
 
-int main(int argc, char* argv[]) {
-
+int main(int argc, char *argv[]){
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <config.yaml>" << std::endl;
         return 1;
     }
 
-    std::signal(SIGINT, signal_handler);
+    std::signal(SIGTERM, signal_handler); // systemctl stop
+    std::signal(SIGHUP, signal_handler);  // service reload
+    std::signal(SIGQUIT, signal_handler); // graceful quit
+    std::signal(SIGINT, signal_handler);  // ctrl+c
 
     Config config(argv[1]);
 
@@ -27,5 +29,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-
