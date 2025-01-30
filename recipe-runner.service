@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=recipe-runner /home/reactor/SMPBR-recipe-runner/config/default.yaml
+ExecStart=recipe-runner /home/reactor/recipe-runner/config/default.yaml
 Restart=always
 User=root
 
