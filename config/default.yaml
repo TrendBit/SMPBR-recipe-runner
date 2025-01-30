@@ -1,8 +1,8 @@
 api_server:
-  url: "192.168.1.241:8089"
+  url: "localhost:8089"
 
 experiment:
-  cycle_length: 10
+  cycle_length: 30
   init_process:
     - heater_on
     - illumination_on
@@ -20,10 +20,11 @@ aerator:
   volume: 50
 
 heater:
-  intensity: 0.5
+  intensity: 0.4
 
 pump:
   volume: 3
+  flowrate: 30
 
 illumination:
   channel_0: 0.5
