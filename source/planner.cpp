@@ -47,8 +47,8 @@ uint Planner::Load_loop(std::vector<Events::Config> events, Config::Components c
 std::unique_ptr<Events::Event> Planner::Generate_event(const Events::Config& config, Config::Components components_settings){
     switch (config.type) {
         case Events::Type::heater_on:
-            return std::make_unique<Events::Heater_intensity>(
-                config.params[0].value_or(components_settings.heater.intensity));
+            return std::make_unique<Events::Heater_target>(
+                config.params[0].value_or(components_settings.heater.temperature));
 
         case Events::Type::illumination_on: {
             std::array<float,4> intensities = {

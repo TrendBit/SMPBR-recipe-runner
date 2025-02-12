@@ -21,13 +21,13 @@
 #include "events/cuvette_pump_stop.hpp"
 #include "events/heater_intensity.hpp"
 #include "events/heater_temperature.hpp"
+#include "events/heater_target.hpp"
 #include "events/heater_turn_off.hpp"
 #include "events/led_panel_intensity.hpp"
 #include "events/mixer_stir.hpp"
 #include "events/mixer_stop.hpp"
 #include "events/print.hpp"
 #include "events/wait.hpp"
-
 
 /**
  * @brief   Class responsible for planning and executing events
