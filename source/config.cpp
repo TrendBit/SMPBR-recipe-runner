@@ -64,7 +64,7 @@ Config::Components Config::Load_components(const YAML::Node yaml){
         components.heater.intensity = yaml["heater"]["intensity"].as<float>();
     }
     if (yaml["heater"]["temperature"]) {
-        components.heater.intensity = yaml["heater"]["temperature"].as<float>();
+        components.heater.temperature = yaml["heater"]["temperature"].as<float>();
     }
 
     if (yaml["pump"]["volume"]) {
