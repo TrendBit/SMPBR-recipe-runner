@@ -48,9 +48,9 @@ public:
     };
 
 private:
-    struct Experiment{
-        std::vector<Events::Type> init_events;
-        std::vector<Events::Type> loop_events;
+    struct Experiment {
+        std::vector<Events::Config> init_events;
+        std::vector<Events::Config> loop_events;
     };
 
 private:
@@ -66,9 +66,9 @@ public:
 
     std::string Server_URL() const { return api_url; }
 
-    std::vector<Events::Type> Loop_events() const { return experiment.loop_events; }
+    std::vector<Events::Config> Loop_events() const { return experiment.loop_events; }
 
-    std::vector<Events::Type> Init_events() const { return experiment.init_events; }
+    std::vector<Events::Config> Init_events() const { return experiment.init_events; }
 
     Components Components_config() const { return components; }
 
@@ -76,4 +76,8 @@ private:
     static Config::Experiment Load_experiment(const YAML::Node& yaml);
 
     static Config::Components Load_components(const YAML::Node yaml);
+
+    static Events::Config Parse_event(const YAML::Node& event_node);
+
+    static void Print_event(const Events::Config& event);
 };

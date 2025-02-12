@@ -15,25 +15,23 @@ Config::Experiment Config::Load_experiment(const YAML::Node& yaml) {
 
     // Parse initialization process
     for (const auto& event : yaml["init_process"]) {
-        auto event_name = event.as<std::string>();
-        auto event_type = magic_enum::enum_cast<Events::Type>(event_name);
-        if (event_type.has_value()) {
-            experiment.init_events.push_back(event_type.value());
-            std::cout << "Added event to init: " << event_name << std::endl;
-        } else {
-            std::cout << "Unknown event type: " << event_name << std::endl;
+        try {
+            auto event_config = Parse_event(event);
+            experiment.init_events.push_back(event_config);
+            Print_event(event_config);
+        } catch (const std::exception& e) {
+            std::cout << "Error parsing event: " << e.what() << std::endl;
         }
     }
 
-        // Parse loop process
+    // Parse loop process
     for (const auto& event : yaml["loop_process"]) {
-        auto event_name = event.as<std::string>();
-        auto event_type = magic_enum::enum_cast<Events::Type>(event_name);
-        if (event_type.has_value()) {
-            experiment.loop_events.push_back(event_type.value());
-            std::cout << "Added event to loop: " << event_name << std::endl;
-        } else {
-            std::cout << "Unknown event type: " << event_name << std::endl;
+        try {
+            auto event_config = Parse_event(event);
+            experiment.loop_events.push_back(event_config);
+            Print_event(event_config);
+        } catch (const std::exception& e) {
+            std::cout << "Error parsing event: " << e.what() << std::endl;
         }
     }
 
@@ -91,4 +89,49 @@ Config::Components Config::Load_components(const YAML::Node yaml){
     }
 
     return components;
+}
+
+Events::Config Config::Parse_event(const YAML::Node& event_node) {
+    Events::Config config;
+    std::string event_str = event_node.as<std::string>();
+
+    // Find first space to separate event name
+    size_t pos = event_str.find_first_of(' ');
+    std::string event_name = (pos == std::string::npos) ?
+        event_str : event_str.substr(0, pos);
+
+    // Parse event type
+    auto event_type = magic_enum::enum_cast<Events::Type>(event_name);
+    if (!event_type.has_value()) {
+        throw std::runtime_error("Unknown event type: " + event_name);
+    }
+    config.type = event_type.value();
+
+    // Parse parameters if any exist
+    size_t param_index = 0;
+    while (pos != std::string::npos && param_index < 4) {
+        size_t next_pos = event_str.find_first_of(' ', pos + 1);
+        std::string param = event_str.substr(pos + 1,
+            next_pos == std::string::npos ? next_pos : next_pos - pos - 1);
+
+        try {
+            config.params[param_index++] = std::stof(param);
+        } catch (...) {
+            break;
+        }
+        pos = next_pos;
+    }
+
+    return config;
+}
+
+// Update the print code in Load_experiment to handle std::optional
+void Config::Print_event(const Events::Config& event_config) {
+    std::cout << "Added event: " << magic_enum::enum_name(event_config.type);
+    for (const auto& param : event_config.params) {
+        if (param.has_value()) {
+            std::cout << " " << param.value();
+        }
+    }
+    std::cout << std::endl;
 }
