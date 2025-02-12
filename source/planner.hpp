@@ -68,9 +68,9 @@ public:
      */
     void Start();
 
-    uint Load_init(std::vector<Events::Type> events, Config::Components components_settings);
+    uint Load_init(std::vector<Events::Config> events, Config::Components components_settings);
 
-    uint Load_loop(std::vector<Events::Type> events, Config::Components components_settings);
+    uint Load_loop(std::vector<Events::Config> events, Config::Components components_settings);
 
     /**
      * @brief   Add event to loop
@@ -110,7 +110,7 @@ public:
 
 private:
 
-    std::unique_ptr<Events::Event> Generate_event(Events::Type type, Config::Components components_settings);
+    std::unique_ptr<Events::Event> Generate_event(const Events::Config& config, Config::Components components_settings);
 
     void Clean_events();
 };
