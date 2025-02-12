@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include <array>
+#include <optional>
 
 namespace Events{
     enum class Type{
@@ -17,5 +19,10 @@ namespace Events{
         air,
         mix,
         wait
+    };
+
+    struct Config {  // Renamed from EventConfig
+        Type type;
+        std::array<std::optional<float>, 4> params = {std::nullopt, std::nullopt, std::nullopt, std::nullopt};
     };
 }
