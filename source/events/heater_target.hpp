@@ -13,7 +13,7 @@ using json = nlohmann::json;
 
 namespace Events {
 /**
- * @brief   API call to get temperature of heater plate
+ * @brief   API call to set target temperature of bottle controller by heater
  */
 class Heater_target: public API_post {
 private:
@@ -24,7 +24,9 @@ private:
 
 public:
     /**
-     * @brief Construct a new Heater_temperature event API call
+     * @brief Construct a new Heater_target object
+     *
+     * @param target    Target temperature of bottle
      */
     explicit Heater_target(float target) : API_post("/control/heater/target_temperature"), target(target) {}
 
